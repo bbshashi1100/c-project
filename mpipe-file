@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh './build.sh'
+            }
+        }
+        stage('Versioning') {
+            when {
+                branch 'main'
+            }
+            steps {
+                echo 'Tagging the release version...'
+                sh 'git tag -a v$(date +%Y%m%d%H%M%S) -m "Release version"'
+                sh 'git push origin --tags'
+            }
+        }
+    }
+}
